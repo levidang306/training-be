@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { DateTimeEntity } from './base/dateTimeEntity';
 import { Project } from './project.entity';
+import { List } from './list.entity';
 
 @Entity('boards')
 export class Board extends DateTimeEntity {
@@ -14,7 +14,13 @@ export class Board extends DateTimeEntity {
   @Column({ type: 'text', nullable: true })
   public description: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  public coverUrl: string;
+
   @ManyToOne(() => Project, (project) => project.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'project_id' })
+  @JoinColumn({ name: 'projectId' })
   public project: Project;
+
+  @OneToMany(() => List, list => list.board)
+  lists: List[];
 }

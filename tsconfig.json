@@ -17,8 +17,8 @@
     "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "types": ["node","jest"]
+    "types": ["node"]
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "typeorm.config.ts"],
 }

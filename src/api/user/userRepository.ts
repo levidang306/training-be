@@ -1,16 +1,29 @@
-import { User } from '@/api/user/userModel';
+import AppDataSource from '@/configs/typeorm.config';
+import { User } from '@/common/entities/user.entity';
 
-export const users: User[] = [
-  { id: 1, name: 'Alice', email: 'alice@example.com', age: 42, createdAt: new Date(), updatedAt: new Date() },
-  { id: 2, name: 'Bob', email: 'bob@example.com', age: 21, createdAt: new Date(), updatedAt: new Date() },
-];
+export class UserRepository {
+  private repo = AppDataSource.getRepository(User);
 
-export const userRepository = {
-  findAllAsync: async (): Promise<User[]> => {
-    return users;
-  },
+  async findAll(): Promise<User[]> {
+    console.log('🚀 ~ UserRepository ~ findAll ~ return this.repo.find();:');
+    return this.repo.find();
+  }
 
-  findByIdAsync: async (id: number): Promise<User | null> => {
-    return users.find((user) => user.id === id) || null;
-  },
-};
+  async findById(id: string): Promise<User | null> {
+    return this.repo.findOne({ where: { id } });
+  }
+
+  async createUser(data: Partial<User>): Promise<User> {
+    const user = this.repo.create(data);
+    return this.repo.save(user);
+  }
+
+  async updateUser(id: string, data: Partial<User>): Promise<User | null> {
+    await this.repo.update(id, data);
+    return this.findById(id);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.repo.delete(id);
+  }
+}

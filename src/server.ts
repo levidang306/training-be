@@ -16,10 +16,12 @@ import 'reflect-metadata';
 dataSource
   .initialize()
   .then(() => {
-    console.log('Data Source has been initialized!');
+    logger.info('Data Source has been initialized!');
+    console.log();
   })
   .catch((err) => {
-    console.error('Error during Data Source initialization:', err);
+    const errorMessage = `Error during Data Source initialization:, ${(err as Error).message}`;
+    logger.error(errorMessage);
   });
 
 const logger = pino({ name: 'server start' });
@@ -32,6 +34,10 @@ app.set('trust proxy', true);
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
 app.use(rateLimiter);
+
+// Body parsing middleware
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Request logging
 app.use(requestLogger);

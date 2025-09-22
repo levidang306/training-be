@@ -1,6 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { ProjectMembers } from './projectmembers.entity';
+import { ProjectMembers } from './project-members.entity';
+import { CardMembers } from './card-members.entity';
+import { Comment } from './comment.entity';
+import { Notification } from './notification.entity';
 
 @Entity('users')
 export class User extends DateTimeEntity {
@@ -22,6 +25,15 @@ export class User extends DateTimeEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   public avatarUrl: string;
 
-  @OneToMany(() => ProjectMembers, (projectMember) => projectMember.project)
-  public projectMembers: ProjectMembers[];
+  // @OneToMany(() => ProjectMembers, (projectMember) => projectMember.project)
+  // public projectMembers: ProjectMembers[];
+
+  // @OneToMany(() => CardMembers, (cardMember) => cardMember.user)
+  // public cardMembers: CardMembers[];
+
+  // @OneToMany(() => Comment, (comment) => comment.user)
+  // public comments: Comment[];
+
+  // @OneToMany(() => Notification, (notification) => notification.user)
+  // public notifications: Notification[];
 }
