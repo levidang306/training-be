@@ -23,7 +23,7 @@ registry=https://registry.npmjs.org/
 engine-strict=false
 
 # Faster installation
-prefer-frozen-lockfile=true
+prefer-frozen-lockfile=false
 
 # Better logging
 loglevel=info
