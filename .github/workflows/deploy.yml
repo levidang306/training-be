@@ -19,7 +19,6 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   NODE_VERSION: '18'
-  PNPM_VERSION: '9'
 
 jobs:
   test:
@@ -52,15 +51,23 @@ jobs:
 
       - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: 📦 Install dependencies
         run: |
-          # Remove yarn.lock if it exists to avoid conflicts
-          rm -f yarn.lock
-          # Install with frozen lockfile, fallback if lockfile issues
-          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+          # Remove conflicting lock files
+          rm -f yarn.lock package-lock.json
+          # Install dependencies with fallback strategy
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "Installing with existing lockfile..."
+            pnpm install --frozen-lockfile || {
+              echo "Frozen lockfile failed, regenerating..."
+              rm -f pnpm-lock.yaml
+              pnpm install
+            }
+          else
+            echo "No lockfile found, installing fresh..."
+            pnpm install
+          fi
 
       - name: 🔧 Setup test environment
         run: |
