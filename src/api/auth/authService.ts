@@ -5,7 +5,6 @@ import { UserRepository } from '@/api/user/userRepository';
 import { User } from '@/common/entities/user.entity';
 import { MailTrigger } from '@/common/enums/enumBase';
 import { ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
-import { calculateUnixTime } from '@/common/utils/';
 import { generateJwt, verifyJwt } from '@/common/utils/jwtUtils';
 import { sendEmail } from '@/common/utils/mailService';
 import { logger } from '@/server';
