@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task-management-config
+  namespace: task-management
+data:
+  NODE_ENV: 'production'
+  HOST: '0.0.0.0'
+  PORT: '8080'
+  CORS_ORIGIN: 'http://localhost:3000'
+  COMMON_RATE_LIMIT_WINDOW_MS: '900000'
+  COMMON_RATE_LIMIT_MAX_REQUESTS: '20'
+  # Database configuration
+  DB_TYPE: 'postgres'
+  DB_HOST: 'postgres-service'
+  DB_PORT: '5432'
+  DB_DATABASE: 'task_management'
+  DB_NAME: 'task_management'
+  DB_USERNAME: 'postgres'
+  # JWT configuration
+  JWT_EXPIRES_IN: '1d'
+  # SMTP configuration (update with your values)
+  SMTP_HOST: 'smtp.gmail.com'
+  SMTP_PORT: '587'
+  FRONTEND_URL: 'http://localhost:3000'
