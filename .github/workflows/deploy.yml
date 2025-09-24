@@ -1,23 +1,12 @@
-name: Deploy to Production
+name: Build and Test
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, main]
     tags: ['v*']
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   NODE_VERSION: '18'
 
 jobs:
@@ -94,17 +83,10 @@ jobs:
       - name: 🧪 Run tests
         run: pnpm run test:cov
 
-  build-and-push:
-    name: 🏗️ Build and Push Docker Image
+  build:
+    name: 🏗️ Build Docker Image
     runs-on: ubuntu-latest
     needs: test
-    permissions:
-      contents: read
-      packages: write
-
-    outputs:
-      image: ${{ steps.image.outputs.image }}
-      digest: ${{ steps.build.outputs.digest }}
 
     steps:
       - name: 📥 Checkout code
@@ -113,148 +95,29 @@ jobs:
       - name: 🏗️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 🔐 Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: 🏷️ Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: task-management-app
           tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: 🐳 Build and push Docker image
+      - name: 🐳 Build Docker image (no push)
         id: build
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
 
-      - name: 📋 Generate image name
-        id: image
-        run: echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}" >> $GITHUB_OUTPUT
-
-  deploy-staging:
-    name: 🚀 Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'staging'
-    environment:
-      name: staging
-      url: https://task-management-staging.example.com
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🔧 Setup kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-
-      - name: 🔐 Configure kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-
-      - name: 🔄 Update deployment image
-        run: |
-          kubectl set image deployment/task-management-app \
-            task-management=${{ needs.build-and-push.outputs.image }} \
-            -n task-management-staging
-
-      - name: ⏳ Wait for rollout
-        run: |
-          kubectl rollout status deployment/task-management-app \
-            -n task-management-staging \
-            --timeout=300s
-
-      - name: 🧪 Run health check
-        run: |
-          kubectl run health-check --rm -i --restart=Never \
-            --image=curlimages/curl:latest \
-            --namespace=task-management-staging \
-            -- curl -f http://task-management-service/health-check
-
-  deploy-production:
-    name: 🌟 Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [build-and-push, deploy-staging]
-    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.environment == 'production'
-    environment:
-      name: production
-      url: https://task-management-api.example.com
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🔧 Setup kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-
-      - name: 🔐 Configure kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-
-      - name: 🔄 Update deployment image
-        run: |
-          kubectl set image deployment/task-management-app \
-            task-management=${{ needs.build-and-push.outputs.image }} \
-            -n task-management
-
-      - name: ⏳ Wait for rollout
-        run: |
-          kubectl rollout status deployment/task-management-app \
-            -n task-management \
-            --timeout=600s
-
-      - name: 🧪 Run health check
-        run: |
-          kubectl run health-check --rm -i --restart=Never \
-            --image=curlimages/curl:latest \
-            --namespace=task-management \
-            -- curl -f http://task-management-service/health-check
-
-      - name: 📢 Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ## 🚀 Release Notes
-
-            Docker Image: `${{ needs.build-and-push.outputs.image }}`
-
-            ### 📋 Changes
-            - Automated deployment to production
-            - Image digest: `${{ needs.build-and-push.outputs.digest }}`
-
-            ### 🔗 Links
-            - [Production URL](https://task-management-api.example.com)
-            - [Health Check](https://task-management-api.example.com/health-check)
-            - [API Documentation](https://task-management-api.example.com/docs)
-          draft: false
-          prerelease: false
+      - name: ✅ Build completed successfully
+        run: echo "Docker image built successfully without deployment"
