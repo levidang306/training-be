@@ -20,7 +20,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [User],
+  entities: [User, Project, ProjectMembers, Board, List, Card, CardMembers, Comment, Notification],
   migrationsTableName: 'migrations',
   migrations: [join(__dirname, '../../src/common/migrations/**/*.ts')],
   synchronize: true,
