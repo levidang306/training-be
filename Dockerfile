@@ -7,8 +7,8 @@ WORKDIR /app
 # Install pnpm globally and git (needed for some build scripts)
 RUN apk add --no-cache git && npm install -g pnpm
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy package files and pnpm configuration
+COPY package.json pnpm-lock.yaml .pnpmfile.cjs ./
 
 # Install dependencies (including dev dependencies for build)
 # Set environment variables to ensure proper build behavior
@@ -34,8 +34,8 @@ WORKDIR /app
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy package files and pnpm configuration
+COPY package.json pnpm-lock.yaml .pnpmfile.cjs ./
 
 # Set production environment
 ENV NODE_ENV=production
