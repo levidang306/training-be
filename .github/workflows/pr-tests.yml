@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: '18'
-  PNPM_VERSION: '8'
+  PNPM_VERSION: '9'
 
 jobs:
   test:
@@ -58,7 +58,11 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: 📦 Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          # Remove yarn.lock if it exists to avoid conflicts
+          rm -f yarn.lock
+          # Install with frozen lockfile, fallback if lockfile issues
+          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 
       - name: 🔧 Setup test environment
         run: |

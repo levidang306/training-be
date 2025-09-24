@@ -1,0 +1,29 @@
+# Use pnpm's strict peer dependencies (but not too strict for CI)
+strict-peer-dependencies=false
+
+# Automatically install peer dependencies
+auto-install-peers=true
+
+# Dedupe packages to save space
+dedupe-peer-dependents=true
+
+# Prevent phantom dependencies
+shamefully-hoist=false
+
+# Use Node.js resolution for better compatibility
+resolution-mode=highest
+
+# Store configuration
+store-dir=~/.pnpm-store
+
+# Registry configuration
+registry=https://registry.npmjs.org/
+
+# Engine strict mode
+engine-strict=false
+
+# Faster installation
+prefer-frozen-lockfile=true
+
+# Better logging
+loglevel=info
