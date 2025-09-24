@@ -2,10 +2,8 @@ import bcrypt from 'bcryptjs';
 import { StatusCodes } from 'http-status-codes';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { UserRepository } from '@/api/user/userRepository';
 import { User } from '@/common/entities/user.entity';
 import { MailTrigger } from '@/common/enums/enumBase';
-import { ResponseStatus } from '@/common/models/serviceResponse';
 import { generateJwt, verifyJwt } from '@/common/utils/jwtUtils';
 import { sendEmail } from '@/common/utils/mailService';
 

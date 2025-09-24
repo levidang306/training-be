@@ -2,9 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { User } from '@/api/user/schemas';
-import { UserRepository } from '@/api/user/userRepository';
 import { UserService } from '@/api/user/userService';
-import { ResponseStatus } from '@/common/models/serviceResponse';
 
 // Mock the logger
 vi.mock('@/server', () => ({
