@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
     tags: ['v*']
   workflow_dispatch:
     inputs:
@@ -25,7 +25,7 @@ jobs:
   test:
     name: 🧪 Run Tests
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15-alpine
@@ -90,11 +90,11 @@ jobs:
     permissions:
       contents: read
       packages: write
-    
+
     outputs:
       image: ${{ steps.image.outputs.image }}
       digest: ${{ steps.build.outputs.digest }}
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -146,7 +146,7 @@ jobs:
     environment:
       name: staging
       url: https://task-management-staging.example.com
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -189,7 +189,7 @@ jobs:
     environment:
       name: production
       url: https://task-management-api.example.com
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -234,13 +234,13 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             ## 🚀 Release Notes
-            
+
             Docker Image: `${{ needs.build-and-push.outputs.image }}`
-            
+
             ### 📋 Changes
             - Automated deployment to production
             - Image digest: `${{ needs.build-and-push.outputs.digest }}`
-            
+
             ### 🔗 Links
             - [Production URL](https://task-management-api.example.com)
             - [Health Check](https://task-management-api.example.com/health-check)
