@@ -9,13 +9,16 @@ This guide covers how to deploy the Task Management Backend using GitHub Actions
 Navigate to your repository → Settings → Secrets and variables → Actions, and add these secrets:
 
 #### For Container Registry (GitHub Container Registry)
+
 - `GITHUB_TOKEN` - Automatically provided by GitHub
 
 #### For Kubernetes Deployment
+
 - `KUBE_CONFIG_STAGING` - Base64 encoded kubeconfig for staging cluster
 - `KUBE_CONFIG_PRODUCTION` - Base64 encoded kubeconfig for production cluster
 
 #### For Code Coverage (Optional)
+
 - `CODECOV_TOKEN` - Token from codecov.io for coverage reports
 
 ### Encoding Kubeconfig for Secrets
@@ -31,23 +34,29 @@ cat /path/to/your/kubeconfig | base64 -w 0
 ## 🔄 Workflow Triggers
 
 ### 1. PR Tests (`pr-tests.yml`)
+
 **Triggers:**
+
 - Pull request to `main` or `develop` branches
 - Push to `main` or `develop` branches
 
 **Actions:**
+
 - ✅ Runs unit tests with coverage
 - ✅ Security audit
 - ✅ Builds Docker image (no push)
 - ✅ Comments on PR with results
 
 ### 2. Deployment (`deploy.yml`)
+
 **Triggers:**
+
 - Push to `main` branch (auto-deploy to staging)
 - Tags starting with `v*` (deploy to production)
 - Manual workflow dispatch
 
 **Actions:**
+
 - ✅ Runs full test suite
 - ✅ Builds and pushes Docker image to GHCR
 - ✅ Deploys to staging environment
@@ -55,11 +64,14 @@ cat /path/to/your/kubeconfig | base64 -w 0
 - ✅ Creates GitHub release (on tags)
 
 ### 3. Code Quality (`code-quality.yml`)
+
 **Triggers:**
+
 - Pull request to `main` or `develop` branches
 - Push to `main` or `develop` branches
 
 **Actions:**
+
 - ✅ ESLint and Prettier checks
 - ✅ TypeScript type checking
 - ✅ Commit message linting
@@ -69,11 +81,13 @@ cat /path/to/your/kubeconfig | base64 -w 0
 ## 🌍 Environments
 
 ### Staging Environment
+
 - **Namespace:** `task-management-staging`
 - **URL:** `https://task-management-staging.example.com`
 - **Auto-deployed:** On every push to `main`
 
 ### Production Environment
+
 - **Namespace:** `task-management`
 - **URL:** `https://task-management-api.example.com`
 - **Deployed:** On version tags or manual trigger
@@ -81,6 +95,7 @@ cat /path/to/your/kubeconfig | base64 -w 0
 ## 🏗️ Docker Image
 
 Images are built and pushed to GitHub Container Registry:
+
 - **Registry:** `ghcr.io`
 - **Image:** `ghcr.io/levidang306/training-be`
 - **Tags:**
@@ -94,6 +109,7 @@ Images are built and pushed to GitHub Container Registry:
 ### Automatic Deployment (Recommended)
 
 1. **For Staging:**
+
    ```bash
    git push origin main
    ```
@@ -115,6 +131,7 @@ Images are built and pushed to GitHub Container Registry:
 ## 🔧 Local Development Deployment
 
 ### Build and Test Locally
+
 ```bash
 # Install dependencies
 pnpm install
@@ -133,6 +150,7 @@ docker run -p 8080:8080 --env-file .env task-management-be:local
 ```
 
 ### Deploy to Local Kubernetes
+
 ```bash
 # Build and load image to local cluster
 docker build -t task-management-be:local .
@@ -147,6 +165,7 @@ kubectl set image deployment/task-management-app task-management=task-management
 ## 📊 Monitoring Deployment
 
 ### Check Deployment Status
+
 ```bash
 # Check pods
 kubectl get pods -n task-management
@@ -159,6 +178,7 @@ kubectl logs -f deployment/task-management-app -n task-management
 ```
 
 ### Health Checks
+
 - **Local:** `http://localhost:8080/health-check`
 - **Staging:** `https://task-management-staging.example.com/health-check`
 - **Production:** `https://task-management-api.example.com/health-check`
