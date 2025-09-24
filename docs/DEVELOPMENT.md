@@ -178,6 +178,7 @@ src/
 ### Writing Tests
 
 #### Service Tests Example
+
 ```typescript
 // authService.test.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -196,7 +197,7 @@ describe('AuthService', () => {
       email: 'test@example.com',
       password: 'password123',
       firstName: 'Test',
-      lastName: 'User'
+      lastName: 'User',
     };
 
     // Act
@@ -210,6 +211,7 @@ describe('AuthService', () => {
 ```
 
 #### Router Tests Example
+
 ```typescript
 // authRouter.test.ts
 import request from 'supertest';
@@ -222,13 +224,10 @@ describe('Auth Router', () => {
       email: 'test@example.com',
       password: 'password123',
       firstName: 'Test',
-      lastName: 'User'
+      lastName: 'User',
     };
 
-    const response = await request(app)
-      .post('/auth/register')
-      .send(userData)
-      .expect(201);
+    const response = await request(app).post('/auth/register').send(userData).expect(201);
 
     expect(response.body.success).toBe(true);
     expect(response.body.responseObject.user.email).toBe(userData.email);
@@ -252,12 +251,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        '**/*.test.ts',
-        '**/*.spec.ts',
-      ],
+      exclude: ['node_modules/', 'dist/', '**/*.test.ts', '**/*.spec.ts'],
     },
   },
 });
@@ -278,7 +272,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [User, Project, Board, List, Card, /* ... */],
+  entities: [User, Project, Board, List, Card /* ... */],
   migrations: ['src/common/migrations/**/*.ts'],
   synchronize: process.env.NODE_ENV === 'development',
 });
@@ -309,7 +303,7 @@ export class User extends DateTimeEntity {
   @Column({ default: false })
   isEmailVerified!: boolean;
 
-  @OneToMany(() => Project, project => project.owner)
+  @OneToMany(() => Project, (project) => project.owner)
   projects!: Project[];
 }
 ```
@@ -317,22 +311,26 @@ export class User extends DateTimeEntity {
 ### Migrations
 
 #### Generate Migration
+
 ```bash
 # After modifying entities
 pnpm run typeorm:generate-migration -- AddUserTable
 ```
 
 #### Create Empty Migration
+
 ```bash
 pnpm run typeorm:create-migration -- AddIndexes
 ```
 
 #### Run Migrations
+
 ```bash
 pnpm run typeorm:run-migrations
 ```
 
 #### Revert Migration
+
 ```bash
 pnpm run typeorm:revert-migration
 ```
@@ -406,11 +404,7 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticate = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -425,7 +419,7 @@ export const authenticate = (
     const token = authHeader.substring(7);
     const payload = verifyToken(token);
     req.user = payload;
-    
+
     next();
   } catch (error) {
     return res.status(401).json({
@@ -461,7 +455,7 @@ Create `.vscode/launch.json`:
     {
       "name": "Debug Tests",
       "type": "node",
-      "request": "launch",  
+      "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "args": ["run", "--no-coverage"],
       "console": "integratedTerminal"
@@ -480,14 +474,17 @@ import pino from 'pino';
 
 export const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
-  transport: process.env.NODE_ENV === 'development' ? {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      ignore: 'pid,hostname',
-      translateTime: 'SYS:standard',
-    },
-  } : undefined,
+  transport:
+    process.env.NODE_ENV === 'development'
+      ? {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            ignore: 'pid,hostname',
+            translateTime: 'SYS:standard',
+          },
+        }
+      : undefined,
 });
 ```
 
@@ -500,26 +497,22 @@ Global error handler:
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
 
-export const errorHandler = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  logger.error({
-    error: error.message,
-    stack: error.stack,
-    url: req.url,
-    method: req.method,
-  }, 'Unhandled error');
+export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
+  logger.error(
+    {
+      error: error.message,
+      stack: error.stack,
+      url: req.url,
+      method: req.method,
+    },
+    'Unhandled error'
+  );
 
   const statusCode = (error as any).statusCode || 500;
-  
+
   res.status(statusCode).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : error.message,
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message,
     responseObject: null,
     statusCode,
   });
@@ -549,6 +542,7 @@ type(scope): description
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -558,6 +552,7 @@ type(scope): description
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```bash
 git commit -m "feat(auth): add email verification functionality"
 git commit -m "fix(user): resolve password hashing issue"
@@ -581,38 +576,45 @@ Husky and lint-staged are configured to run checks before commits:
 ## 🚀 Deployment
 
 ### Local Development
+
 ```bash
 pnpm run dev
 ```
 
 ### Docker Development
+
 ```bash
 pnpm run docker:build
 pnpm run docker:run
 ```
 
 ### Kubernetes Development
+
 ```bash
 pnpm run k8s:deploy
 ```
 
 ### Production Deployment
+
 Handled by GitHub Actions on push to `main` or version tags.
 
 ## 📊 Monitoring & Observability
 
 ### Health Checks
+
 - **Endpoint**: `/health-check`
 - **Kubernetes**: Liveness and readiness probes
 - **Response Time**: < 100ms
 
 ### Metrics
+
 - Request count and duration
 - Error rates
 - Database connection pool status
 - Memory and CPU usage
 
 ### Logging
+
 - Structured JSON logs with Pino
 - Request/response logging
 - Error tracking with stack traces
@@ -621,18 +623,21 @@ Handled by GitHub Actions on push to `main` or version tags.
 ## 🛡️ Security Best Practices
 
 ### Code Security
+
 - Input validation with Zod schemas
 - SQL injection prevention with TypeORM
 - XSS protection with helmet
 - Rate limiting to prevent abuse
 
 ### Authentication Security
+
 - Secure password hashing with bcrypt
 - JWT with short expiration times
 - Email verification for new accounts
 - Secure session management
 
 ### Infrastructure Security
+
 - Non-root Docker containers
 - Kubernetes security contexts
 - Secret management with Kubernetes secrets

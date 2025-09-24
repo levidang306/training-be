@@ -1,5 +1,5 @@
-import AppDataSource from '@/configs/typeorm.config';
 import { User } from '@/common/entities/user.entity';
+import AppDataSource from '@/configs/typeorm.config';
 
 export class UserRepository {
   private repo = AppDataSource.getRepository(User);

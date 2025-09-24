@@ -25,6 +25,7 @@
     "type-check": "tsc --noEmit",
     "release": "semantic-release",
     "prepare": "husky",
+    "setup": "node -e \"require('child_process').exec(process.platform === 'win32' ? 'scripts\\\\setup.bat' : 'bash scripts/setup.sh')\"",
     "docker:build": "docker build -t task-management-be:latest .",
     "docker:run": "docker run -p 8080:8080 --env-file .env task-management-be:latest",
     "k8s:deploy": "kubectl apply -f k8s/",
@@ -33,7 +34,7 @@
     "typeorm:run-migrations": "pnpm build && pnpm typeorm migration:run -- -d ./dist/configs/typeorm.config.js",
     "typeorm:generate-migration": "pnpm build && pnpm typeorm -- -d ./dist/configs/typeorm.config.js migration:generate ./src/common/migrations/$npm_config_name",
     "typeorm:create-migration": "pnpm build && pnpm typeorm -- migration:create ./src/common/migrations/$npm_config_name",
-    "typeorm:revert-migration": "yarn build && npm run typeorm -- -d ./dist/configs/typeorm.config.js migration:revert"
+    "typeorm:revert-migration": "pnpm build && pnpm typeorm -- -d ./dist/configs/typeorm.config.js migration:revert"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.0",
@@ -61,6 +62,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.12.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@semantic-release/changelog": "^6.0.3",
@@ -94,8 +96,8 @@
     "vitest": "^3.2.4"
   },
   "lint-staged": {
-    "**/*": "npm run format",
-    "**/*.{js,ts}": "npm run lint:fix"
+    "**/*": "pnpm run format",
+    "**/*.{js,ts}": "pnpm run lint:fix"
   },
   "author": "SGROUP",
   "license": "ISC"

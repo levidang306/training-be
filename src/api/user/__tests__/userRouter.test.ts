@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
-import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { User } from '@/api/user/schemas';
 import { userService } from '@/api/user/userService';
-import { ServiceResponse, ResponseStatus } from '@/common/models/serviceResponse';
+import { ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
 import { app } from '@/server';
 
 // Mock the userService

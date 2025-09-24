@@ -19,18 +19,18 @@ function readPackage(pkg, context) {
 
 module.exports = {
   hooks: {
-    readPackage
+    readPackage,
   },
-  
+
   // Prevent phantom dependencies
   'auto-install-peers': true,
-  
+
   // Use strict peer dependencies
   'strict-peer-dependencies': false,
-  
+
   // Shamefully hoist packages to avoid compatibility issues
   'shamefully-hoist': false,
-  
+
   // Dedupe packages
-  'dedupe-peer-dependents': true
+  'dedupe-peer-dependents': true,
 };

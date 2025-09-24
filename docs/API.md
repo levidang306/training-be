@@ -21,6 +21,7 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 ### Token Lifecycle
+
 - **Expires In**: 1 day (configurable via `JWT_EXPIRES_IN`)
 - **Refresh**: Re-authenticate when token expires
 - **Storage**: Store securely on client-side (localStorage/sessionStorage)
@@ -30,11 +31,13 @@ Authorization: Bearer <your-jwt-token>
 ### 🏥 Health Check
 
 #### Get Health Status
+
 ```http
 GET /health-check
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -49,11 +52,13 @@ GET /health-check
 ### 🔐 Authentication Endpoints
 
 #### Register User
+
 ```http
 POST /auth/register
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -64,6 +69,7 @@ POST /auth/register
 ```
 
 **Response (Success):**
+
 ```json
 {
   "success": true,
@@ -84,17 +90,20 @@ POST /auth/register
 ```
 
 **Validation Rules:**
+
 - Email: Valid email format, unique
 - Password: Minimum 6 characters
 - FirstName: Required, string
 - LastName: Required, string
 
 #### Login User
+
 ```http
 POST /auth/login
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -103,6 +112,7 @@ POST /auth/login
 ```
 
 **Response (Success):**
+
 ```json
 {
   "success": true,
@@ -122,11 +132,13 @@ POST /auth/login
 ```
 
 #### Verify Email
+
 ```http
 POST /auth/verify-email
 ```
 
 **Request Body:**
+
 ```json
 {
   "token": "email-verification-token"
@@ -134,6 +146,7 @@ POST /auth/verify-email
 ```
 
 **Response (Success):**
+
 ```json
 {
   "success": true,
@@ -144,11 +157,13 @@ POST /auth/verify-email
 ```
 
 #### Resend Verification Email
+
 ```http
 POST /auth/resend-verification
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -160,12 +175,14 @@ POST /auth/resend-verification
 ### 👤 User Endpoints
 
 #### Get User Profile
+
 ```http
 GET /user/profile
 Authorization: Bearer <token>
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -184,12 +201,14 @@ Authorization: Bearer <token>
 ```
 
 #### Update User Profile
+
 ```http
 PUT /user/profile
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "firstName": "Jane",
@@ -213,16 +232,20 @@ All API responses follow a consistent format:
 ```
 
 ### Success Response Example
+
 ```json
 {
   "success": true,
   "message": "Operation completed successfully",
-  "responseObject": { /* data */ },
+  "responseObject": {
+    /* data */
+  },
   "statusCode": 200
 }
 ```
 
 ### Error Response Example
+
 ```json
 {
   "success": false,
@@ -241,18 +264,18 @@ All API responses follow a consistent format:
 
 ## 🔢 HTTP Status Codes
 
-| Code | Description | Use Case |
-|------|-------------|----------|
-| 200 | OK | Successful GET, PUT requests |
-| 201 | Created | Successful POST requests |
-| 400 | Bad Request | Validation errors, malformed requests |
-| 401 | Unauthorized | Missing or invalid authentication |
-| 403 | Forbidden | Insufficient permissions |
-| 404 | Not Found | Resource not found |
-| 409 | Conflict | Duplicate resource (e.g., email already exists) |
-| 422 | Unprocessable Entity | Invalid data format |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server-side errors |
+| Code | Description           | Use Case                                        |
+| ---- | --------------------- | ----------------------------------------------- |
+| 200  | OK                    | Successful GET, PUT requests                    |
+| 201  | Created               | Successful POST requests                        |
+| 400  | Bad Request           | Validation errors, malformed requests           |
+| 401  | Unauthorized          | Missing or invalid authentication               |
+| 403  | Forbidden             | Insufficient permissions                        |
+| 404  | Not Found             | Resource not found                              |
+| 409  | Conflict              | Duplicate resource (e.g., email already exists) |
+| 422  | Unprocessable Entity  | Invalid data format                             |
+| 429  | Too Many Requests     | Rate limit exceeded                             |
+| 500  | Internal Server Error | Server-side errors                              |
 
 ## 🛡️ Rate Limiting
 
@@ -260,7 +283,7 @@ The API implements rate limiting to prevent abuse:
 
 - **Window**: 15 minutes (900,000ms)
 - **Max Requests**: 20 per window per IP
-- **Headers**: 
+- **Headers**:
   - `X-RateLimit-Limit`: Maximum requests allowed
   - `X-RateLimit-Remaining`: Requests remaining in current window
   - `X-RateLimit-Reset`: Timestamp when limit resets
@@ -280,6 +303,7 @@ The API includes security headers in all responses:
 ### cURL Examples
 
 #### Register
+
 ```bash
 curl -X POST http://localhost:8080/auth/register \
   -H "Content-Type: application/json" \
@@ -292,6 +316,7 @@ curl -X POST http://localhost:8080/auth/register \
 ```
 
 #### Login
+
 ```bash
 curl -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
@@ -302,6 +327,7 @@ curl -X POST http://localhost:8080/auth/login \
 ```
 
 #### Get Profile
+
 ```bash
 curl -X GET http://localhost:8080/user/profile \
   -H "Authorization: Bearer your-jwt-token-here"
@@ -310,6 +336,7 @@ curl -X GET http://localhost:8080/user/profile \
 ### JavaScript/Fetch Examples
 
 #### Register
+
 ```javascript
 const registerUser = async (userData) => {
   const response = await fetch('http://localhost:8080/auth/register', {
@@ -317,9 +344,9 @@ const registerUser = async (userData) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
   });
-  
+
   return await response.json();
 };
 
@@ -328,21 +355,22 @@ const result = await registerUser({
   email: 'john@example.com',
   password: 'securePass123',
   firstName: 'John',
-  lastName: 'Doe'
+  lastName: 'Doe',
 });
 ```
 
 #### Authenticated Request
+
 ```javascript
 const getProfile = async (token) => {
   const response = await fetch('http://localhost:8080/user/profile', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-    }
+    },
   });
-  
+
   return await response.json();
 };
 ```
@@ -352,6 +380,7 @@ const getProfile = async (token) => {
 ### Common Error Scenarios
 
 #### Validation Errors (400)
+
 ```json
 {
   "success": false,
@@ -373,6 +402,7 @@ const getProfile = async (token) => {
 ```
 
 #### Authentication Errors (401)
+
 ```json
 {
   "success": false,
@@ -383,6 +413,7 @@ const getProfile = async (token) => {
 ```
 
 #### Resource Not Found (404)
+
 ```json
 {
   "success": false,
@@ -395,10 +426,12 @@ const getProfile = async (token) => {
 ## 📖 OpenAPI/Swagger Documentation
 
 Interactive API documentation is available at:
+
 - **Local**: http://localhost:8080/docs
 - **Production**: https://task-management-api.example.com/docs
 
 The Swagger UI provides:
+
 - Interactive endpoint testing
 - Request/response schemas
 - Authentication testing
@@ -407,23 +440,26 @@ The Swagger UI provides:
 ## 🧪 Testing the API
 
 ### Using Postman
+
 1. Import the OpenAPI spec from `/docs/json`
 2. Set up environment variables for base URL and tokens
 3. Test authentication flow first
 4. Use returned JWT token for authenticated endpoints
 
 ### Using Thunder Client (VS Code)
+
 1. Install Thunder Client extension
 2. Create a new collection
 3. Add requests for each endpoint
 4. Set up authentication headers
 
 ### Using Browser Developer Tools
+
 ```javascript
 // In browser console
 fetch('http://localhost:8080/health-check')
-  .then(response => response.json())
-  .then(data => console.log(data));
+  .then((response) => response.json())
+  .then((data) => console.log(data));
 ```
 
 ## 🔄 API Versioning
@@ -431,10 +467,12 @@ fetch('http://localhost:8080/health-check')
 Current API version: **v1**
 
 Future versions will be available at:
+
 - `/api/v2/auth/login`
 - `/api/v2/user/profile`
 
 Version information is included in response headers:
+
 - `API-Version: v1`
 
 ## 📈 Performance Considerations
@@ -448,6 +486,7 @@ Version information is included in response headers:
 ## 🌐 CORS Configuration
 
 CORS is configured to allow:
+
 - **Origins**: `http://localhost:3000` (development), production domains
 - **Methods**: GET, POST, PUT, DELETE, OPTIONS
 - **Headers**: Authorization, Content-Type, Accept

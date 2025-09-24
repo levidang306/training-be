@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
 import { Board } from './board.entity';
 import { Card } from './card.entity';
@@ -18,6 +19,6 @@ export class List extends DateTimeEntity {
   @JoinColumn({ name: 'boardId' })
   public board: Board;
 
-  @OneToMany(() => Card, card => card.list)
+  @OneToMany(() => Card, (card) => card.list)
   cards: Card[];
 }

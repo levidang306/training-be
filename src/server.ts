@@ -1,18 +1,19 @@
+import 'reflect-metadata';
+
 import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
 
+import { authRouter } from '@/api/auth/authRouter';
 import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
 import { userRouter } from '@/api/user/userRouter';
-import {authRouter} from '@/api/auth/authRouter';
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
 import errorHandler from '@/common/middleware/errorHandler';
 import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 import dataSource from '@/configs/typeorm.config';
-import 'reflect-metadata';
 
 dataSource
   .initialize()

@@ -6,7 +6,7 @@ export class UserRelatedEntity {
   @Column()
   userId: number;
 
-  @ManyToOne(type => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
 }

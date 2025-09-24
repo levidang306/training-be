@@ -1,10 +1,10 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import errorHandler from '@/common/middleware/errorHandler';
 import requestLogger from '@/common/middleware/requestLogger';
-import { describe, beforeAll, it, expect } from 'vitest';
 
 describe('Request Logger Middleware', () => {
   const app = express();

@@ -1,7 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { ProjectMembers } from './project-members.entity';
 import { Board } from './board.entity';
+import { ProjectMembers } from './project-members.entity';
 
 @Entity('projects')
 export class Project extends DateTimeEntity {

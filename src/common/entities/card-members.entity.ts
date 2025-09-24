@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { User } from './user.entity';
 import { Card } from './card.entity';
+import { User } from './user.entity';
 
 @Entity('card_members')
 @Unique(['card', 'user'])
@@ -12,9 +13,9 @@ export class CardMembers extends DateTimeEntity {
   @Column({ type: 'int' })
   public role: number;
 
-  @ManyToOne(() => Card, card => card.cardMembers)
+  @ManyToOne(() => Card, (card) => card.cardMembers)
   card: Card;
 
-  @ManyToOne(() => User, user => user.cardMembers)
+  @ManyToOne(() => User, (user) => user.cardMembers)
   user: User;
 }

@@ -14,7 +14,7 @@ This guide covers the comprehensive testing strategy for the Task Management Bac
       / E2E \     ← Few tests, high confidence
      /______\
     /        \
-   /Integration\ ← Some tests, medium confidence  
+   /Integration\ ← Some tests, medium confidence
   /__________\
  /            \
 /   Unit Tests  \ ← Many tests, fast feedback
@@ -55,7 +55,7 @@ src/
 │   ├── auth/
 │   │   ├── __tests__/
 │   │   │   ├── authService.test.ts     # Business logic tests
-│   │   │   ├── authRouter.test.ts      # Route handler tests  
+│   │   │   ├── authRouter.test.ts      # Route handler tests
 │   │   │   └── authSchema.test.ts      # Validation tests
 │   │   ├── authService.ts
 │   │   ├── authRouter.ts
@@ -102,11 +102,11 @@ describe('AuthService', () => {
   beforeEach(() => {
     // Reset mocks
     vi.clearAllMocks();
-    
+
     // Create mock instances
     mockUserRepository = vi.mocked(UserRepository);
     mockMailService = vi.mocked(MailService);
-    
+
     // Initialize service with mocks
     authService = new AuthService(mockUserRepository, mockMailService);
   });
@@ -118,7 +118,7 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'password123',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
       const mockUser = {
@@ -127,7 +127,7 @@ describe('AuthService', () => {
         password: 'hashed-password',
         isEmailVerified: false,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       mockUserRepository.findByEmail.mockResolvedValue(null);
@@ -146,13 +146,10 @@ describe('AuthService', () => {
         expect.objectContaining({
           email: userData.email,
           firstName: userData.firstName,
-          lastName: userData.lastName
+          lastName: userData.lastName,
         })
       );
-      expect(mockMailService.sendVerificationEmail).toHaveBeenCalledWith(
-        userData.email,
-        expect.any(String)
-      );
+      expect(mockMailService.sendVerificationEmail).toHaveBeenCalledWith(userData.email, expect.any(String));
     });
 
     it('should throw error when email already exists', async () => {
@@ -161,15 +158,13 @@ describe('AuthService', () => {
         email: 'existing@example.com',
         password: 'password123',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
       mockUserRepository.findByEmail.mockResolvedValue({ id: '123' });
 
       // Act & Assert
-      await expect(authService.register(userData)).rejects.toThrow(
-        'Email already exists'
-      );
+      await expect(authService.register(userData)).rejects.toThrow('Email already exists');
       expect(mockUserRepository.create).not.toHaveBeenCalled();
     });
 
@@ -179,17 +174,13 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'password123',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
-      mockUserRepository.findByEmail.mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      mockUserRepository.findByEmail.mockRejectedValue(new Error('Database connection failed'));
 
       // Act & Assert
-      await expect(authService.register(userData)).rejects.toThrow(
-        'Database connection failed'
-      );
+      await expect(authService.register(userData)).rejects.toThrow('Database connection failed');
     });
   });
 
@@ -198,7 +189,7 @@ describe('AuthService', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       const mockUser = {
@@ -207,7 +198,7 @@ describe('AuthService', () => {
         password: 'hashed-password',
         firstName: 'John',
         lastName: 'Doe',
-        isEmailVerified: true
+        isEmailVerified: true,
       };
 
       mockUserRepository.findByEmail.mockResolvedValue(mockUser);
@@ -227,7 +218,7 @@ describe('AuthService', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'wrongpassword'
+        password: 'wrongpassword',
       };
 
       mockUserRepository.findByEmail.mockResolvedValue(null);
@@ -268,25 +259,22 @@ describe('Auth Router', () => {
         email: 'test@example.com',
         password: 'password123',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
       const mockResponse = {
         success: true,
         message: 'User registered successfully',
         responseObject: {
-          user: { ...userData, id: 'uuid-123', isEmailVerified: false }
+          user: { ...userData, id: 'uuid-123', isEmailVerified: false },
         },
-        statusCode: 201
+        statusCode: 201,
       };
 
       vi.mocked(AuthService.prototype.register).mockResolvedValue(mockResponse);
 
       // Act
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/auth/register').send(userData).expect(201);
 
       // Assert
       expect(response.body).toEqual(mockResponse);
@@ -301,7 +289,7 @@ describe('Auth Router', () => {
           email: 'invalid-email',
           password: '123', // Too short
           firstName: '', // Empty
-          lastName: 'Doe'
+          lastName: 'Doe',
         })
         .expect(400);
 
@@ -317,18 +305,13 @@ describe('Auth Router', () => {
         email: 'test@example.com',
         password: 'password123',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
-      vi.mocked(AuthService.prototype.register).mockRejectedValue(
-        new Error('Email already exists')
-      );
+      vi.mocked(AuthService.prototype.register).mockRejectedValue(new Error('Email already exists'));
 
       // Act
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(500);
+      const response = await request(app).post('/auth/register').send(userData).expect(500);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -341,7 +324,7 @@ describe('Auth Router', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       const mockResponse = {
@@ -349,18 +332,15 @@ describe('Auth Router', () => {
         message: 'Login successful',
         responseObject: {
           accessToken: 'jwt-token',
-          user: { email: loginData.email, firstName: 'John' }
+          user: { email: loginData.email, firstName: 'John' },
         },
-        statusCode: 200
+        statusCode: 200,
       };
 
       vi.mocked(AuthService.prototype.login).mockResolvedValue(mockResponse);
 
       // Act
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/auth/login').send(loginData).expect(200);
 
       // Assert
       expect(response.body).toEqual(mockResponse);
@@ -386,11 +366,11 @@ describe('Authentication Middleware', () => {
 
   beforeEach(() => {
     mockRequest = {
-      headers: {}
+      headers: {},
     };
     mockResponse = {
       status: vi.fn().mockReturnThis(),
-      json: vi.fn()
+      json: vi.fn(),
     };
     mockNext = vi.fn();
   });
@@ -399,7 +379,7 @@ describe('Authentication Middleware', () => {
     // Arrange
     const mockPayload = { userId: 'uuid-123', email: 'test@example.com' };
     mockRequest.headers = {
-      authorization: 'Bearer valid-jwt-token'
+      authorization: 'Bearer valid-jwt-token',
     };
 
     vi.spyOn(jwtUtils, 'verifyToken').mockReturnValue(mockPayload);
@@ -424,7 +404,7 @@ describe('Authentication Middleware', () => {
       success: false,
       message: 'Access token required',
       responseObject: null,
-      statusCode: 401
+      statusCode: 401,
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -432,7 +412,7 @@ describe('Authentication Middleware', () => {
   it('should reject invalid token', async () => {
     // Arrange
     mockRequest.headers = {
-      authorization: 'Bearer invalid-token'
+      authorization: 'Bearer invalid-token',
     };
 
     vi.spyOn(jwtUtils, 'verifyToken').mockImplementation(() => {
@@ -448,7 +428,7 @@ describe('Authentication Middleware', () => {
       success: false,
       message: 'Invalid or expired token',
       responseObject: null,
-      statusCode: 401
+      statusCode: 401,
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -477,7 +457,7 @@ describe('UserRepository Integration', () => {
       database: ':memory:',
       entities: [User],
       synchronize: true,
-      logging: false
+      logging: false,
     });
 
     await dataSource.initialize();
@@ -490,10 +470,7 @@ describe('UserRepository Integration', () => {
 
   beforeEach(async () => {
     // Clean database before each test
-    await dataSource.createQueryBuilder()
-      .delete()
-      .from(User)
-      .execute();
+    await dataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   describe('findByEmail', () => {
@@ -503,7 +480,7 @@ describe('UserRepository Integration', () => {
         email: 'test@example.com',
         password: 'hashed-password',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
       await userRepository.create(userData);
@@ -533,7 +510,7 @@ describe('UserRepository Integration', () => {
         email: 'new@example.com',
         password: 'hashed-password',
         firstName: 'Jane',
-        lastName: 'Smith'
+        lastName: 'Smith',
       };
 
       // Act
@@ -552,7 +529,7 @@ describe('UserRepository Integration', () => {
         email: 'duplicate@example.com',
         password: 'hashed-password',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
 
       await userRepository.create(userData);
@@ -585,10 +562,7 @@ describe('Auth API Integration', () => {
 
   beforeEach(async () => {
     // Clean database
-    await AppDataSource.createQueryBuilder()
-      .delete()
-      .from(User)
-      .execute();
+    await AppDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   describe('Registration Flow', () => {
@@ -597,14 +571,11 @@ describe('Auth API Integration', () => {
         email: 'integration@example.com',
         password: 'password123',
         firstName: 'Integration',
-        lastName: 'Test'
+        lastName: 'Test',
       };
 
       // Step 1: Register user
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      const registerResponse = await request(app).post('/auth/register').send(userData).expect(201);
 
       expect(registerResponse.body.success).toBe(true);
       expect(registerResponse.body.responseObject.user.email).toBe(userData.email);
@@ -613,19 +584,17 @@ describe('Auth API Integration', () => {
       // Step 2: Verify user exists in database
       const userRepository = AppDataSource.getRepository(User);
       const savedUser = await userRepository.findOne({
-        where: { email: userData.email }
+        where: { email: userData.email },
       });
 
       expect(savedUser).toBeDefined();
       expect(savedUser!.isEmailVerified).toBe(false);
 
       // Step 3: Attempt login (should fail - email not verified)
-      const loginResponse = await request(app)
-        .post('/auth/login')
-        .send({
-          email: userData.email,
-          password: userData.password
-        });
+      const loginResponse = await request(app).post('/auth/login').send({
+        email: userData.email,
+        password: userData.password,
+      });
 
       expect(loginResponse.status).toBe(401);
       expect(loginResponse.body.message).toContain('email not verified');
@@ -637,15 +606,15 @@ describe('Auth API Integration', () => {
       // Setup: Create verified user
       const userRepository = AppDataSource.getRepository(User);
       const hashedPassword = await bcrypt.hash('password123', 10);
-      
+
       const user = userRepository.create({
         email: 'auth@example.com',
         password: hashedPassword,
         firstName: 'Auth',
         lastName: 'Test',
-        isEmailVerified: true
+        isEmailVerified: true,
       });
-      
+
       await userRepository.save(user);
 
       // Step 1: Login
@@ -653,7 +622,7 @@ describe('Auth API Integration', () => {
         .post('/auth/login')
         .send({
           email: 'auth@example.com',
-          password: 'password123'
+          password: 'password123',
         })
         .expect(200);
 
@@ -690,12 +659,12 @@ beforeAll(async () => {
       ...process.env,
       NODE_ENV: 'test',
       PORT: '3001',
-      DB_DATABASE: 'task_management_e2e'
-    }
+      DB_DATABASE: 'task_management_e2e',
+    },
   });
 
   // Wait for server to start
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   // Initialize database
   await AppDataSource.initialize();
@@ -723,26 +692,23 @@ describe('User Journey E2E', () => {
       email: `e2e-${Date.now()}@example.com`,
       password: 'securePassword123',
       firstName: 'E2E',
-      lastName: 'User'
+      lastName: 'User',
     };
 
     // 1. Register
-    const registerResponse = await request(baseURL)
-      .post('/auth/register')
-      .send(userData)
-      .expect(201);
+    const registerResponse = await request(baseURL).post('/auth/register').send(userData).expect(201);
 
     expect(registerResponse.body.success).toBe(true);
 
     // 2. Mock email verification (in real E2E, you'd check email)
     // For now, we'll manually verify the user in the database
-    
+
     // 3. Login
     const loginResponse = await request(baseURL)
       .post('/auth/login')
       .send({
         email: userData.email,
-        password: userData.password
+        password: userData.password,
       })
       .expect(200);
 
@@ -762,7 +728,7 @@ describe('User Journey E2E', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         firstName: 'Updated',
-        lastName: 'Name'
+        lastName: 'Name',
       })
       .expect(200);
 
@@ -805,16 +771,16 @@ export default defineConfig({
           branches: 70,
           functions: 70,
           lines: 80,
-          statements: 80
-        }
-      }
+          statements: 80,
+        },
+      },
     },
     pool: 'threads',
     poolOptions: {
       threads: {
-        singleThread: true
-      }
-    }
+        singleThread: true,
+      },
+    },
   },
 });
 ```
@@ -833,8 +799,8 @@ config({ path: '.env.test' });
 vi.mock('../common/services/mailService', () => ({
   MailService: vi.fn().mockImplementation(() => ({
     sendVerificationEmail: vi.fn().mockResolvedValue(true),
-    sendPasswordResetEmail: vi.fn().mockResolvedValue(true)
-  }))
+    sendPasswordResetEmail: vi.fn().mockResolvedValue(true),
+  })),
 }));
 
 // Global test setup
@@ -907,21 +873,21 @@ config:
     - duration: 60
       arrivalRate: 10
 scenarios:
-  - name: "Authentication flow"
+  - name: 'Authentication flow'
     weight: 100
     flow:
       - post:
-          url: "/auth/login"
+          url: '/auth/login'
           json:
-            email: "test@example.com"
-            password: "password123"
+            email: 'test@example.com'
+            password: 'password123'
           capture:
-            - json: "$.responseObject.accessToken"
-              as: "token"
+            - json: '$.responseObject.accessToken'
+              as: 'token'
       - get:
-          url: "/user/profile"
+          url: '/user/profile'
           headers:
-            Authorization: "Bearer {{ token }}"
+            Authorization: 'Bearer {{ token }}'
 ```
 
 ### Benchmark Tests
@@ -933,7 +899,7 @@ import bcrypt from 'bcryptjs';
 
 describe('Password Hashing Benchmark', () => {
   const password = 'testPassword123';
-  
+
   bench('bcrypt hash - rounds 10', async () => {
     await bcrypt.hash(password, 10);
   });
@@ -952,22 +918,26 @@ describe('Password Hashing Benchmark', () => {
 ## 🎯 Testing Best Practices
 
 ### Test Organization
+
 - **AAA Pattern**: Arrange, Act, Assert
 - **One assertion per test**: Test one thing at a time
 - **Descriptive names**: Test names should explain what they test
 - **Independent tests**: Tests should not depend on each other
 
 ### Mocking Strategy
+
 - **Mock external dependencies**: APIs, databases, file systems
 - **Don't mock what you own**: Test real implementations when possible
 - **Mock at the boundary**: Mock at service/repository boundaries
 
 ### Data Management
+
 - **Fresh data**: Each test should start with clean data
 - **Realistic data**: Use data that resembles production
 - **Test edge cases**: Empty arrays, null values, boundary conditions
 
 ### Async Testing
+
 - **Always await**: Don't forget to await async operations
 - **Proper error handling**: Test both success and failure cases
 - **Timeout handling**: Set appropriate timeouts for long operations
@@ -998,13 +968,11 @@ describe('Service with logging', () => {
   it('should log important events', async () => {
     // Enable debug level for this test
     logger.level = 'debug';
-    
+
     const result = await serviceMethod();
-    
+
     // Check logs were created
-    expect(mockLogger.debug).toHaveBeenCalledWith(
-      expect.stringContaining('Processing request')
-    );
+    expect(mockLogger.debug).toHaveBeenCalledWith(expect.stringContaining('Processing request'));
   });
 });
 ```

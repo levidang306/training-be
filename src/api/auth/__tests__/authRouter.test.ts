@@ -3,7 +3,6 @@ import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { app } from '@/server';
-import { ResponseStatus } from '@/common/models/serviceResponse';
 
 import { authService } from '../authService';
 
