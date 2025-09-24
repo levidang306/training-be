@@ -13,6 +13,18 @@ The primary motivation behind this project is to provide a seamless task managem
 - **Real-time Notifications**: Get real-time updates on task assignments, status changes, and deadlines.
 - **Comprehensive API Documentation**: Easily integrate with the backend using well-documented APIs.
 
+## 📚 Documentation
+
+Comprehensive documentation is available to help you understand and work with this system:
+
+- **[🏗️ Architecture Overview](docs/KUBERNETES_ARCHITECTURE.md)** - System architecture and component relationships
+- **[🚀 Deployment Guide](docs/DEPLOYMENT.md)** - Complete deployment instructions and procedures  
+- **[📖 API Documentation](docs/API.md)** - Detailed API reference with endpoints, authentication, and examples
+- **[💻 Development Guide](docs/DEVELOPMENT.md)** - Development setup, testing, and best practices
+- **[🧪 Testing Guide](docs/TESTING.md)** - Comprehensive testing strategies and examples
+- **[🛡️ Security Guide](docs/SECURITY.md)** - Security practices, authentication, and protection measures  
+- **[⚡ Performance Guide](docs/PERFORMANCE.md)** - Performance optimization and monitoring
+
 ## 🛠️ Getting Started
 
 ### Step 1: 🚀 Initial Setup
