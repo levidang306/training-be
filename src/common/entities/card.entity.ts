@@ -1,8 +1,9 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { List } from './list.entity';
-import { Comment } from './comment.entity';
 import { CardMembers } from './card-members.entity';
+import { Comment } from './comment.entity';
+import { List } from './list.entity';
 
 @Entity('cards')
 export class Card extends DateTimeEntity {
@@ -27,7 +28,7 @@ export class Card extends DateTimeEntity {
   @Column({ name: 'dueDate', type: 'date', nullable: true })
   dueDate: Date;
 
-  @ManyToOne(() => List, list => list.cards)
+  @ManyToOne(() => List, (list) => list.cards)
   list: List;
 
   @OneToMany(() => CardMembers, (cardMember) => cardMember.card)

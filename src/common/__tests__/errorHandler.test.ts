@@ -1,9 +1,9 @@
 import express, { Express } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import errorHandler from '@/common/middleware/errorHandler';
-import { describe, beforeAll, it, expect } from 'vitest';
 
 describe('Error Handler Middleware', () => {
   let app: Express;

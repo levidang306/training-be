@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
 import { Card } from './card.entity';
 import { User } from './user.entity';
@@ -11,9 +12,9 @@ export class Comment extends DateTimeEntity {
   @Column({ type: 'text' })
   content: string;
 
-  @ManyToOne(() => Card, card => card.comments)
+  @ManyToOne(() => Card, (card) => card.comments)
   card: Card;
 
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(() => User, (user) => user.comments)
   user: User;
 }

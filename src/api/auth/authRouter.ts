@@ -1,11 +1,11 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Request, Response, Router } from 'express';
+import { z } from 'zod';
 
 import { PostUser, PostUserSchema } from '@/api/user/schemas/createUserSchema';
 import { UserSchema } from '@/api/user/schemas/userSchema';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
-import { z } from 'zod';
 
 import { authService } from './authService';
 import { Login, PostLogin, PostLoginSchema, PostVerifyEmailSchema, TokenSchema } from './schemas/authSchema';

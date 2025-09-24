@@ -1,4 +1,4 @@
-import jwt, { SignOptions, Secret } from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 
 const JWT_SECRET: Secret =
   typeof process.env.JWT_SECRET === 'string' && process.env.JWT_SECRET.length > 0 ? process.env.JWT_SECRET : 'default';

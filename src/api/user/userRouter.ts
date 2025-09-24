@@ -6,9 +6,9 @@ import { PostUser, PostUserSchema } from '@/api/user/schemas/';
 import { GetUserSchema, UserSchema } from '@/api/user/schemas/';
 import { userService } from '@/api/user/userService';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
-import authenticateJWT from '@/common/middleware/authentication';
 import AuthenticatedRequest from '@/common/declare/authenticationRequest.declare';
+import authenticateJWT from '@/common/middleware/authentication';
+import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
 
 export const userRegistry = new OpenAPIRegistry();
 

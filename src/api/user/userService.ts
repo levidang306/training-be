@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { UserType, CreateUserType } from '@/api/user/userModel';
+import { CreateUserType, UserType } from '@/api/user/userModel';
 import { UserRepository } from '@/api/user/userRepository';
 import { ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
 import { logger } from '@/server';

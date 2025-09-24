@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
+import { describe, expect, it } from 'vitest';
 
 import { app } from '@/server';
 
 import { generateOpenAPIDocument } from '../openAPIDocumentGenerator';
-import { describe, it, expect } from 'vitest';
 
 describe('OpenAPI Router', () => {
   describe('Swagger JSON route', () => {

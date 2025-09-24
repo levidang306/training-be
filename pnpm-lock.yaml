@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: oykhn4xgzlf4vjpbtjo4xy5cbm
+pnpmfileChecksum: rbcnaxccbblmi6wrwi7votgdgu
 
 importers:
   .:
@@ -85,6 +85,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.8.1
         version: 19.8.1
+      '@eslint/js':
+        specifier: ^9.12.0
+        version: 9.36.0
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@24.2.9(typescript@5.9.2))

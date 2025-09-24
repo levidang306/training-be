@@ -1,15 +1,16 @@
 import { config } from 'dotenv';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
-import { Project } from '@/common/entities/project.entity';
+
 import { Board } from '@/common/entities/board.entity';
-import { User } from '@/common/entities/user.entity';
-import { ProjectMembers } from '@/common/entities/project-members.entity';
-import { List } from '@/common/entities/list.entity';
 import { Card } from '@/common/entities/card.entity';
 import { CardMembers } from '@/common/entities/card-members.entity';
 import { Comment } from '@/common/entities/comment.entity';
+import { List } from '@/common/entities/list.entity';
 import { Notification } from '@/common/entities/notification.entity';
+import { Project } from '@/common/entities/project.entity';
+import { ProjectMembers } from '@/common/entities/project-members.entity';
+import { User } from '@/common/entities/user.entity';
 
 config();
 

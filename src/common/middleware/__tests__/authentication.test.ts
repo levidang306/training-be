@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock JWT utils first
@@ -6,8 +6,9 @@ vi.mock('@/common/utils/jwtUtils', () => ({
   verifyJwt: vi.fn(),
 }));
 
-import authenticateJWT from '../authentication';
 import { verifyJwt } from '@/common/utils/jwtUtils';
+
+import authenticateJWT from '../authentication';
 
 const mockVerifyJwt = vi.mocked(verifyJwt);
 
@@ -75,7 +76,7 @@ describe('Authentication Middleware', () => {
 
       // Assert
       expect(mockResponse.status).toHaveBeenCalledWith(401);
-      expect (mockResponse.json).toHaveBeenCalledWith({ message: 'Access token required' });
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Access token required' });
       expect(mockNext).not.toHaveBeenCalled();
     });
 

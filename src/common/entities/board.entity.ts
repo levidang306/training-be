@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { Project } from './project.entity';
 import { List } from './list.entity';
+import { Project } from './project.entity';
 
 @Entity('boards')
 export class Board extends DateTimeEntity {
@@ -21,6 +22,6 @@ export class Board extends DateTimeEntity {
   @JoinColumn({ name: 'projectId' })
   public project: Project;
 
-  @OneToMany(() => List, list => list.board)
+  @OneToMany(() => List, (list) => list.board)
   lists: List[];
 }
