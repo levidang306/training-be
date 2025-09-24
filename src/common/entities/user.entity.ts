@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { DateTimeEntity } from './base/dateTimeEntity';
-import { ProjectMembers } from './project-members.entity';
 import { CardMembers } from './card-members.entity';
 import { Comment } from './comment.entity';
 import { Notification } from './notification.entity';
+import { ProjectMembers } from './project-members.entity';
 
 @Entity('users')
 export class User extends DateTimeEntity {
@@ -25,15 +26,18 @@ export class User extends DateTimeEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   public avatarUrl: string;
 
-  // @OneToMany(() => ProjectMembers, (projectMember) => projectMember.project)
-  // public projectMembers: ProjectMembers[];
+  @Column({ type: 'bool', nullable: false, default: false })
+  public isActive: boolean;
 
-  // @OneToMany(() => CardMembers, (cardMember) => cardMember.user)
-  // public cardMembers: CardMembers[];
+  @OneToMany(() => ProjectMembers, (projectMember) => projectMember.project)
+  public projectMembers: ProjectMembers[];
 
-  // @OneToMany(() => Comment, (comment) => comment.user)
-  // public comments: Comment[];
+  @OneToMany(() => CardMembers, (cardMember) => cardMember.user)
+  public cardMembers: CardMembers[];
 
-  // @OneToMany(() => Notification, (notification) => notification.user)
-  // public notifications: Notification[];
+  @OneToMany(() => Comment, (comment) => comment.user)
+  public comments: Comment[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  public notifications: Notification[];
 }

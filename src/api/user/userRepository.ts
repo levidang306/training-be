@@ -5,7 +5,6 @@ export class UserRepository {
   private repo = AppDataSource.getRepository(User);
 
   async findAll(): Promise<User[]> {
-    console.log('🚀 ~ UserRepository ~ findAll ~ return this.repo.find();:');
     return this.repo.find();
   }
 
@@ -25,5 +24,19 @@ export class UserRepository {
 
   async deleteUser(id: string): Promise<void> {
     await this.repo.delete(id);
+  }
+  async findByEmailAsync(email: string | undefined): Promise<User | null> {
+    return this.repo.findOneBy({ email });
+  }
+  async createUserAsync(userData: Partial<User>): Promise<User> {
+    const newUser = this.repo.create(userData);
+    return this.repo.save(newUser);
+  }
+  async findByIdAsync(id: string): Promise<User | null> {
+    return this.repo.findOneBy({ id: id });
+  }
+  async updateUserAsync(id: string, updateData: Partial<User>): Promise<User | null> {
+    await this.repo.update(id, updateData);
+    return this.repo.findOneBy({ id });
   }
 }

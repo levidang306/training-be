@@ -7,6 +7,8 @@ import { GetUserSchema, UserSchema } from '@/api/user/schemas/';
 import { userService } from '@/api/user/userService';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
+import authenticateJWT from '@/common/middleware/authentication';
+import AuthenticatedRequest from '@/common/declare/authenticationRequest.declare';
 
 export const userRegistry = new OpenAPIRegistry();
 
@@ -39,6 +41,14 @@ const registerPaths = () => {
     request: { params: GetUserSchema.shape.params },
     responses: createApiResponse(UserSchema, 'Success'),
   });
+
+  userRegistry.registerPath({
+    method: 'get',
+    path: '/users/me',
+    tags: ['User'],
+    security: [{ bearerAuth: [] }],
+    responses: createApiResponse(UserSchema, 'Success'),
+  });
 };
 
 // Route to create a new user
@@ -55,7 +65,17 @@ router.get('/', async (_req: Request, res: Response) => {
   const serviceResponse = await userService.findAll();
   handleServiceResponse(serviceResponse, res);
 });
+// Route to get current user profile
+router.get('/me', authenticateJWT, async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user?.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
+  console.log('🚀 ~ userId:', userId);
+  const serviceResponse = await userService.findById(userId);
+  handleServiceResponse(serviceResponse, res);
+});
 // Route to get a user by id
 router.get('/:id', validateRequest(GetUserSchema), async (req: Request, res: Response) => {
   const id = req.params.id;
