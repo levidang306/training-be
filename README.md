@@ -39,17 +39,38 @@ The primary motivation behind this project is to provide a seamless task managem
 ### Step 3: 🏃‍♂️ Running the Project
 - For development mode:
   ```bash
-  yarn dev
+    # Yarn
+    yarn dev
+    
+    # PNPM
+    pnpm dev
+    
+    # Bun
+    bun dev
   ```
 - To build the project:
   ```bash
-  yarn build
+    # Yarn
+    yarn build
+    
+    # PNPM
+    pnpm build
+    
+    # Bun
+    bun build
   ```
 - For production mode:
   - Set `NODE_ENV="production"` in `.env`
   - Run:
     ```bash
-    yarn build && yarn start
+        # Yarn
+      yarn build && yarn start
+      
+      # PNPM
+      pnpm build && pnpm start
+      
+      # Bun
+      bun build && bun start
     ```
 
 ## 📁 Project Structure
