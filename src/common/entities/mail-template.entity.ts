@@ -7,7 +7,7 @@ export class MailTemplate extends DateTimeEntity {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column({ type: 'nvarchar', length: 50 })
+  @Column({ type: 'varchar', length: 50 })
   public subject: string;
 
   @Column({ type: 'text', nullable: false })
