@@ -8,6 +8,7 @@ import { userService } from '@/api/user/userService';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import AuthenticatedRequest from '@/common/declare/authenticationRequest.declare';
 import authenticateJWT from '@/common/middleware/authentication';
+import { loadUserRoles, requireRole } from '@/common/middleware/authorization';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
 
 export const userRegistry = new OpenAPIRegistry();
@@ -23,6 +24,7 @@ const registerPaths = () => {
     method: 'post',
     path: '/users',
     tags: ['User'],
+    security: [{ bearerAuth: [] }],
     request: { body: PostUser },
     responses: createApiResponse(UserSchema, 'Success'),
   });
@@ -31,6 +33,7 @@ const registerPaths = () => {
     method: 'get',
     path: '/users',
     tags: ['User'],
+    security: [{ bearerAuth: [] }],
     responses: createApiResponse(z.array(UserSchema), 'Success'),
   });
 
@@ -52,19 +55,32 @@ const registerPaths = () => {
 };
 
 // Route to create a new user
-router.post('/', validateRequest(PostUserSchema), async (req: Request, res: Response) => {
-  const userData = req.body;
-  console.log('🚀 ~ userData:', userData);
+router.post(
+  '/',
+  authenticateJWT,
+  loadUserRoles,
+  requireRole(['admin', 'board_owner']),
+  validateRequest(PostUserSchema),
+  async (req: Request, res: Response) => {
+    const userData = req.body;
+    console.log('🚀 ~ userData:', userData);
 
-  const serviceResponse = await userService.create(userData);
-  handleServiceResponse(serviceResponse, res);
-});
+    const serviceResponse = await userService.create(userData);
+    handleServiceResponse(serviceResponse, res);
+  }
+);
 
 // Route to get all users
-router.get('/', async (_req: Request, res: Response) => {
-  const serviceResponse = await userService.findAll();
-  handleServiceResponse(serviceResponse, res);
-});
+router.get(
+  '/',
+  authenticateJWT,
+  loadUserRoles,
+  requireRole(['admin', 'board_owner']),
+  async (_req: Request, res: Response) => {
+    const serviceResponse = await userService.findAll();
+    handleServiceResponse(serviceResponse, res);
+  }
+);
 // Route to get current user profile
 router.get('/me', authenticateJWT, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user?.userId;

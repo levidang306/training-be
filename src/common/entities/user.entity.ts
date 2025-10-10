@@ -1,10 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { DateTimeEntity } from './base/dateTimeEntity';
 import { CardMembers } from './card-members.entity';
 import { Comment } from './comment.entity';
 import { Notification } from './notification.entity';
 import { ProjectMembers } from './project-members.entity';
+import { Role } from './role.entity';
 
 @Entity('users')
 export class User extends DateTimeEntity {
@@ -29,7 +30,7 @@ export class User extends DateTimeEntity {
   @Column({ type: 'bool', nullable: false, default: false })
   public isActive: boolean;
 
-  @OneToMany(() => ProjectMembers, (projectMember) => projectMember.project)
+  @OneToMany(() => ProjectMembers, (projectMember) => projectMember.user)
   public projectMembers: ProjectMembers[];
 
   @OneToMany(() => CardMembers, (cardMember) => cardMember.user)
@@ -40,4 +41,7 @@ export class User extends DateTimeEntity {
 
   @OneToMany(() => Notification, (notification) => notification.user)
   public notifications: Notification[];
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable()
+  public role: Role[];
 }
