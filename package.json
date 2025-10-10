@@ -10,7 +10,6 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "rimraf dist && tsup",
     "start": "node dist/index.js",
     "clean": "rimraf dist coverage",
@@ -34,7 +33,16 @@
     "typeorm:run-migrations": "pnpm build && pnpm typeorm migration:run -- -d ./dist/configs/typeorm.config.js",
     "typeorm:generate-migration": "pnpm build && pnpm typeorm -- -d ./dist/configs/typeorm.config.js migration:generate ./src/common/migrations/$npm_config_name",
     "typeorm:create-migration": "pnpm build && pnpm typeorm -- migration:create ./src/common/migrations/$npm_config_name",
-    "typeorm:revert-migration": "pnpm build && pnpm typeorm -- -d ./dist/configs/typeorm.config.js migration:revert"
+    "seed:auth": "tsx scripts/run-seeder.ts",
+    "seed:auth:up": "tsx scripts/run-seeder.ts up",
+    "seed:auth:down": "tsx scripts/run-seeder.ts down",
+    "typeorm:revert-migration": "pnpm build && pnpm typeorm -- -d ./dist/configs/typeorm.config.js migration:revert",
+    "dev": "tsx watch --clear-screen=false --ignore node_modules --ignore dist src/index.ts",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f app",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:dev:rebuild": "docker-compose -f docker-compose.dev.yml up --build --force-recreate",
+    "docker:dev:clean": "docker-compose -f docker-compose.dev.yml down -v --remove-orphans"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.0",

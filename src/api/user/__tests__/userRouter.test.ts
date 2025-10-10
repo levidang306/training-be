@@ -16,6 +16,54 @@ vi.mock('@/api/user/userService', () => ({
   },
 }));
 
+// Mock TypeORM data source
+vi.mock('@/configs/typeorm.config', () => ({
+  default: {
+    initialize: vi.fn().mockResolvedValue(undefined),
+    getRepository: vi.fn(),
+    isInitialized: true,
+  },
+}));
+
+// Mock authentication middleware
+vi.mock('@/common/middleware/authentication', () => ({
+  default: (req: any, res: any, next: any) => {
+    // Mock authenticated user
+    req.user = {
+      userId: '550e8400-e29b-41d4-a716-446655440001',
+      email: 'admin@test.com',
+      roles: ['admin'],
+      permissions: ['users:read', 'users:create', 'users:update', 'users:delete'],
+    };
+    next();
+  },
+}));
+
+// Mock authorization middleware
+vi.mock('@/common/middleware/authorization', () => ({
+  loadUserRoles: (req: any, res: any, next: any) => {
+    // User roles already loaded in authentication mock
+    next();
+  },
+  requireRole: (_roles: string | string[]) => (req: any, res: any, next: any) => {
+    // Always allow for tests
+    next();
+  },
+  requirePermission: (_permissions: string | string[]) => (req: any, res: any, next: any) => {
+    // Always allow for tests
+    next();
+  },
+}));
+
+// Mock the userService
+vi.mock('@/api/user/userService', () => ({
+  userService: {
+    findAll: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+  },
+}));
+
 // Mock test data
 const mockUsers: User[] = [
   {

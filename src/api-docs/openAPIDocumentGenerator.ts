@@ -1,9 +1,10 @@
 import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 
 import { authRegistry } from '@/api/auth/authRouter';
+import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
 import { userRegistry } from '@/api/user/userRouter';
 export function generateOpenAPIDocument() {
-  const registry = new OpenAPIRegistry([userRegistry, authRegistry]);
+  const registry = new OpenAPIRegistry([userRegistry, authRegistry, healthCheckRegistry]);
 
   registry.registerComponent('securitySchemes', 'bearerAuth', {
     type: 'http',
